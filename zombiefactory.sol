@@ -37,7 +37,9 @@ contract ZombieFactory {
     /// @notice Public function that takes a name, and uses it to create a zombie with random DNA
     /// @param _name the name to be converted in random DNA
     function createRandomZombie(string _name) public {
+        require(ownerZombieCount[msg.sender] == 0);
         uint randDna = _generateRandomDna(_name);
+        randDna = randDna - randDna % 100;
         _createZombie(_name, randDna);
     }
 }
