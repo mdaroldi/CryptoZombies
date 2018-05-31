@@ -24,7 +24,7 @@ contract ZombieFeeding is ZombieFactory {
 
     /// @notice Set the Kitty contract address
     /// @param _address Kitty address
-    function setKittyContractAddress(address _address) external {
+    function setKittyContractAddress(address _address) external onlyOwner {
         kittyContract = KittyInterface(_address);
     }
     /// @notice Function combines the DNA's of the zombie and other forms of life to create a new zombie
