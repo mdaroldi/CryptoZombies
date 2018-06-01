@@ -27,6 +27,19 @@ contract ZombieFeeding is ZombieFactory {
     function setKittyContractAddress(address _address) external onlyOwner {
         kittyContract = KittyInterface(_address);
     }
+
+    /// @notice Function to trigger the zombie cooldown after feeding
+    /// @param _zombie Pass a reference of a zombie
+    function _triggerCooldown(Zombie storage _zombie) internal {
+        _zombie.readyTime = uint32(now + cooldownTime);
+    }
+
+    /// @notice Function indicates when zombie is ready to feed again
+    /// @param _zombie Pass a reference of a zombie
+    function _isReady(Zombie storage _zombie) internal view returns (bool) {
+        return (_zombie.readyTime <= now);
+    }
+
     /// @notice Function combines the DNA's of the zombie and other forms of life to create a new zombie
     /// @param _zombieId DNA of the zombie
     /// @param _targetDna DNA of the victim
