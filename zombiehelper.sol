@@ -12,6 +12,17 @@ contract ZombieHelper is ZombieFeeding {
         _;
     }
 
+    /// @notice Function to withdraw received values
+    function withdraw() external onlyOwner {
+        owner.transfer(this.balance);
+    }
+
+    /// @notice
+    /// @param _fee The fee to be charged to level up the zombie
+    function setLevelUpFee(uint _fee) external onlyOwner {
+        levelUpFee = _fee;
+    }
+
     /// @notice Function that enables users to level their zombie up by paying a fee
     /// @param _zombieId The zombie that will be leveled up
     function levelUp(uint _zombieId) external payable {
