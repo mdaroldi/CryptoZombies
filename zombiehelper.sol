@@ -33,7 +33,7 @@ contract ZombieHelper is ZombieFeeding {
     /// @notice Function allows user to change the zombie's name above level 2
     /// @param _zombieId The zombie that will have the name changed
     /// @param _newName String with the new name
-    function changeName(uint _zombieId, string _newName) external aboveLevel(2, _zombieId) {
+    function changeName(uint _zombieId, string _newName) external aboveLevel(2, _zombieId) ownerOf(_zombieId) {
         require(msg.sender == zombieToOwner[_zombieId]);
         zombies[_zombieId].name = _newName;
     }
@@ -41,7 +41,7 @@ contract ZombieHelper is ZombieFeeding {
     /// @notice Function allows user to change the zombie's DNA above level 20
     /// @param _zombieId The zombie that will have the DNA customized
     /// @param _newDna Uint with the new DNA
-    function changeDna(uint _zombieId, uint _newDna) external aboveLevel(20, _zombieId) {
+    function changeDna(uint _zombieId, uint _newDna) external aboveLevel(20, _zombieId) ownerOf(_zombieId) {
         require(msg.sender == zombieToOwner[_zombieId]);
         zombies[_zombieId].dna = _newDna;
     }
