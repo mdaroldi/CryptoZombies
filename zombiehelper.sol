@@ -4,10 +4,19 @@ import "./zombiefeeding.sol";
 
 contract ZombieHelper is ZombieFeeding {
 
+    uint levelUpFee = 0.001 ether;
+
     /// @notice Modifier uses the zombie level to restrict access to special abilities
     modifier aboveLevel(uint _level, uint _zombieId) {
         require(zombies[_zombieId].level >= _level);
         _;
+    }
+
+    /// @notice Function that enables users to level their zombie up by paying a fee
+    /// @param _zombieId The zombie that will be leveled up
+    function levelUp(uint _zombieId) external payable {
+        require(msg.value == levelUpFee);
+        zombies[_zombieId].level++;
     }
 
     /// @notice Function allows user to change the zombie's name above level 2
@@ -19,7 +28,7 @@ contract ZombieHelper is ZombieFeeding {
     }
 
     /// @notice Function allows user to change the zombie's DNA above level 20
-    /// @param _zombieId The zombie that will have the name changed
+    /// @param _zombieId The zombie that will have the DNA customized
     /// @param _newDna Uint with the new DNA
     function changeDna(uint _zombieId, uint _newDna) external aboveLevel(20, _zombieId) {
         require(msg.sender == zombieToOwner[_zombieId]);
