@@ -17,15 +17,36 @@ contract ZombieOwnership is ZombieAttack, ERC721 {
         return zombieToOwner[_tokenId];
     }
 
-    function transfer(address _to, uint256 _tokenId) public {
-
+    /// @notice Function that will be used with transfer() and takeOwnership(), which have the same logic but in reverse order
+    /// @param _from The owner of the credits
+    /// @param _to Who will receive the credits
+    /// @param _tokenId The ID of the zombie
+    function _transfer(address _from, address _to, uint256 _tokenId) private {
+        ownerZombieCount[_to]++;
+        ownerZombieCount[_from]--;
+        zombieToOwner[_tokenId] = _to;
+        Transfer(_from, _to, _tokenId);
+    }
+    /// @notice Function with the transfer logic
+    /// @param _to Who will receive the credits
+    /// @param _tokenId The ID of the zombie
+    function transfer(address _to, uint256 _tokenId) public onlyOwnerOf(_tokenId) {
+        _transfer(msg.sender, _to, _tokenId);
     }
 
-    function approve(address _to, uint256 _tokenId) public {
-
+    /// @notice Function for approval of the transfer
+    /// @param _to Who will receive the credits
+    /// @param _tokenId The ID of the zombie
+    function approve(address _to, uint256 _tokenId) public onlyOwnerOf(_tokenId) {
+        zombieApprovals[_tokenId] = _to;
+        Approval(msg.sender, _to, _tokenId);
     }
 
+    /// @notice Function for checking if the msg.sender has been approved to take the token
+    /// @param _tokenId The ID of the zombie
     function takeOwnership(uint256 _tokenId) public {
-
+        require(msg.sender == zombieApprovals[_tokenId]);
+        address owner = ownerOf(_tokenId);
+        _transfer(owner, msg.sender, _tokenId);
     }
 }
